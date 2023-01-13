@@ -16,6 +16,9 @@ onready var cooldown = $Whip_cooldown
 onready var sprite = $AnimatedSprite
 onready var anims = $AnimationTree
 
+onready var weapon = $Weapon
+onready var damage_zone = $Weapon/Damage_zone
+
 onready var fx_anims
 onready var dust_pos
 onready var trail = $AnimatedSprite/SpriteTrail
@@ -28,7 +31,7 @@ export (float) var gravity: float = 100
 export (float) var max_fall_speed: float = 300
 export (float) var speed: float  = 50
 export (float) var acceleration: float  = 55
-export (float) var jump_force: float  = 400
+export (float) var jump_force: float  = 420
 
 var motion = Vector2()
 
@@ -50,6 +53,8 @@ var fx_container = null
 func _ready():
 	anims.active = true
 	trail.active = false
+
+	damage_zone.team = self.team
 
 	anim_state_machine = anims.get("parameters/playback")
 
@@ -74,10 +79,14 @@ func _physics_process(delta):
 	if !locked:
 		if Input.is_action_pressed("right"):
 			motion.x += acceleration
+			weapon.scale.x = 1
+
 			sprite.flip_h = false
 			walking = true
 		elif Input.is_action_pressed("left"):
 			motion.x -= acceleration
+			weapon.scale.x = -1
+
 			sprite.flip_h = true
 			walking = true
 		else: 
@@ -142,7 +151,7 @@ func handle_hit(damage):
 		i_frames.start()
 		hp -= damage
 
-		fx_anims.play("Hit")
+		#fx_anims.play("Hit")
 
 		if hp <= 0:
 			die()

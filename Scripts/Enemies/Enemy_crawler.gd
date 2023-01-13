@@ -2,10 +2,10 @@ extends KinematicBody2D
 
 
 onready var vis = $VisibilityNotifier2D
+onready var damage_zone = $Damage_zone
 
 
 export (int) var hp: int = 1
-export (int) var damage: int = 1
 export (int) var team: int = 1
 
 export (float) var speed: float = 10
@@ -20,6 +20,8 @@ var active: bool = false
 
 # Set up
 func _ready():
+	damage_zone.team = self.team
+
 	vis.connect("screen_entered", self, "enable_disable")
 	vis.connect("screen_exited", self, "enable_disable")
 
@@ -63,11 +65,18 @@ func _physics_process(delta):
 
 
 
-# Damage
-func _on_Damage_zone_body_entered(body: Node):
-	if body.has_method("handle_hit") and body.team != team:
-		body.handle_hit(damage)
-	
+# Taking damage
+func handle_hit(damage):
+	hp -= damage
+
+	#fx_anims.play("Hit")
+
+	if hp <= 0:
+		die()
+
+
+func die():
+	queue_free()
 
 
 

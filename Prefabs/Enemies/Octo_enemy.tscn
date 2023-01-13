@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Sprites/Enemies/Enemy_1.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Enemies/Enemy_crawler.gd" type="Script" id=2]
+[ext_resource path="res://Scripts/Util/Damage_zone.gd" type="Script" id=3]
 
 [sub_resource type="CircleShape2D" id=108]
 radius = 5.0
@@ -42,6 +43,7 @@ frames = SubResource( 106 )
 offset = Vector2( 0, -3 )
 
 [node name="Damage_zone" type="Area2D" parent="."]
+script = ExtResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Damage_zone"]
 position = Vector2( 0, 1 )
@@ -51,4 +53,4 @@ shape = SubResource( 107 )
 position = Vector2( 1.19209e-07, -2.38419e-07 )
 scale = Vector2( 0.7, 0.4 )
 
-[connection signal="body_entered" from="Damage_zone" to="." method="_on_Damage_zone_body_entered"]
+[connection signal="body_entered" from="Damage_zone" to="Damage_zone" method="_on_Damage_zone_body_entered"]

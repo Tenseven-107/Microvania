@@ -1,10 +1,11 @@
-[gd_scene load_steps=60 format=2]
+[gd_scene load_steps=62 format=2]
 
 [ext_resource path="res://addons/sprite_trail/SpriteTrail.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/Player/Player.gd" type="Script" id=2]
 [ext_resource path="res://Sprites/Player/Player.png" type="Texture" id=3]
 [ext_resource path="res://addons/randomAudioStreamPlayer/random_audio_stream_player_2D.gd" type="Script" id=4]
 [ext_resource path="res://SFX/Player/cartoony_step_1.wav" type="AudioStream" id=5]
+[ext_resource path="res://Scripts/Util/Damage_zone.gd" type="Script" id=6]
 
 [sub_resource type="CapsuleShape2D" id=2]
 radius = 4.0
@@ -163,6 +164,9 @@ animations = [ {
 [sub_resource type="Gradient" id=56]
 colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 0.392157 )
 
+[sub_resource type="RectangleShape2D" id=57]
+extents = Vector2( 4.5, 11 )
+
 [sub_resource type="Animation" id=32]
 resource_name = "Attack"
 length = 0.3
@@ -203,6 +207,18 @@ tracks/2/keys = {
 "update": 1,
 "values": [ true, false ]
 }
+tracks/3/type = "value"
+tracks/3/path = NodePath("Weapon/Damage_zone/CollisionShape2D:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.08, 0.14, 0.28 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ true, true, false, true ]
+}
 
 [sub_resource type="Animation" id=33]
 resource_name = "Fall"
@@ -231,6 +247,18 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Weapon/Damage_zone/CollisionShape2D:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
 }
 
 [sub_resource type="Animation" id=34]
@@ -285,6 +313,18 @@ tracks/3/keys = {
 "update": 1,
 "values": [ false ]
 }
+tracks/4/type = "value"
+tracks/4/path = NodePath("Weapon/Damage_zone/CollisionShape2D:disabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
 
 [sub_resource type="Animation" id=35]
 resource_name = "Jump"
@@ -313,6 +353,18 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 3 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Weapon/Damage_zone/CollisionShape2D:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
 }
 
 [sub_resource type="Animation" id=52]
@@ -501,17 +553,31 @@ gradient = SubResource( 56 )
 [node name="RayCast2D" type="RayCast2D" parent="Raycasts"]
 position = Vector2( 0, 8 )
 enabled = true
-cast_to = Vector2( 0, 12 )
+cast_to = Vector2( 0, 7 )
 
 [node name="RayCast2D2" type="RayCast2D" parent="Raycasts"]
 position = Vector2( -4, 8 )
 enabled = true
-cast_to = Vector2( 0, 12 )
+cast_to = Vector2( 0, 7 )
 
 [node name="RayCast2D3" type="RayCast2D" parent="Raycasts"]
 position = Vector2( 4, 8 )
 enabled = true
-cast_to = Vector2( 0, 12 )
+cast_to = Vector2( 0, 7 )
+
+[node name="Weapon" type="Node2D" parent="."]
+
+[node name="Damage_zone" type="Area2D" parent="Weapon"]
+collision_layer = 7
+collision_mask = 7
+script = ExtResource( 6 )
+team = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Weapon/Damage_zone"]
+position = Vector2( 14, 1.5 )
+rotation = -1.5708
+shape = SubResource( 57 )
+disabled = true
 
 [node name="SFX" type="Node2D" parent="."]
 
@@ -549,3 +615,5 @@ tree_root = SubResource( 49 )
 anim_player = NodePath("../AnimationPlayer")
 active = true
 parameters/playback = SubResource( 50 )
+
+[connection signal="body_entered" from="Weapon/Damage_zone" to="Weapon/Damage_zone" method="_on_Damage_zone_body_entered"]
