@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/Util/Game_camera.gd" type="Script" id=1]
+
+[sub_resource type="RectangleShape2D" id=51]
+extents = Vector2( 64, 64 )
+
+[node name="Game_camera" type="Camera2D"]
+current = true
+smoothing_enabled = true
+smoothing_speed = 10.0
+script = ExtResource( 1 )
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 51 )
+
+[connection signal="body_exited" from="Area2D" to="." method="_on_Area2D_body_exited"]

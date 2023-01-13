@@ -102,9 +102,11 @@ func _physics_process(delta):
 		else:
 			can_jump = false
 
-
-	if Input.is_action_just_pressed("up") and can_jump and !coyote.is_stopped():
+	if (Input.is_action_just_pressed("up") and can_jump 
+	or Input.is_action_just_pressed("up") and !coyote.is_stopped()):
 		motion.y = -jump_force
+		can_jump = false
+		coyote.stop()
 
 		#var dust_inst =  dust_puff.instance()
 		#dust_inst.global_position = dust_pos.global_position

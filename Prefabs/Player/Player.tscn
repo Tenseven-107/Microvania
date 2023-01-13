@@ -513,18 +513,6 @@ position = Vector2( 4, 8 )
 enabled = true
 cast_to = Vector2( 0, 12 )
 
-[node name="RayCast2D4" type="RayCast2D" parent="Raycasts"]
-position = Vector2( 4, 8 )
-rotation = -1.5708
-enabled = true
-cast_to = Vector2( 0, 15 )
-
-[node name="RayCast2D5" type="RayCast2D" parent="Raycasts"]
-position = Vector2( -4, 8 )
-rotation = 1.5708
-enabled = true
-cast_to = Vector2( 0, 15 )
-
 [node name="SFX" type="Node2D" parent="."]
 
 [node name="RandomAudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="SFX"]
@@ -535,7 +523,7 @@ random_volume_range = 0
 random_pitch_range = 0.7
 
 [node name="Coyote_time" type="Timer" parent="."]
-wait_time = 0.1
+wait_time = 0.5
 one_shot = true
 
 [node name="I_frames" type="Timer" parent="."]
