@@ -37,6 +37,7 @@ export (int) var hp: int = 3
 export (int) var team: int = 0
 
 # Move bools
+export (bool) var locked: bool = false
 var can_jump: bool = true
 var walking: bool = false
 
@@ -70,17 +71,21 @@ func _physics_process(delta):
 
 
 	# Movement
-	if Input.is_action_pressed("right"):
-		motion.x += acceleration
-		sprite.flip_h = false
-		walking = true
-	elif Input.is_action_pressed("left"):
-		motion.x -= acceleration
-		sprite.flip_h = true
-		walking = true
-	else: 
-		motion.x = lerp(motion.x, 0, 0.4)
-		walking = false
+	if !locked:
+		if Input.is_action_pressed("right"):
+			motion.x += acceleration
+			sprite.flip_h = false
+			walking = true
+		elif Input.is_action_pressed("left"):
+			motion.x -= acceleration
+			sprite.flip_h = true
+			walking = true
+		else: 
+			motion.x = lerp(motion.x, 0, 0.4)
+			walking = false
+
+	else:
+		motion.x = 0
 
 	if walking and is_on_floor():
 		anim_state_machine.travel("Walk")
