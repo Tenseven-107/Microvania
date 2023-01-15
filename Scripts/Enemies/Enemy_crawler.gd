@@ -5,19 +5,34 @@ onready var sprite = $AnimatedSprite
 onready var vis = $VisibilityNotifier2D
 onready var damage_zone = $Damage_zone
 
-onready var timer = $Respawn_timer
+onready var respawn_timer = $Respawn_timer
+
+onready var anims = $Anims
+
+onready var appear_sfx = $SFX/RandomAudioStreamPlayer2D3
+
+var fx_container = null
 
 
-export (int) var hp: int = 1
+# Fx
+export (PackedScene) var dead_fx: PackedScene
+
+
+# Combat variables
+export (int) var max_hp: int = 2
+var hp: int = 2
 export (int) var team: int = 1
 
+# Movement Variables
 export (float) var speed: float = 10
 
 var velocity: Vector2
 var move: Vector2
 var rotating: int
 
+# Checks
 var active: bool = false
+var dead: bool = false
 
 
 
@@ -35,7 +50,7 @@ func _ready():
 
 # Movement
 func _physics_process(delta):
-	if timer.is_stopped():
+	if respawn_timer.is_stopped() and !dead:
 		sprite.playing = true
 
 		if rotating:
@@ -77,18 +92,25 @@ func _physics_process(delta):
 
 # Taking damage
 func handle_hit(damage):
-	if timer.is_stopped():
+	if respawn_timer.is_stopped() and !dead:
 		hp -= damage
 
-		#fx_anims.play("Hit")
+		anims.play("Hit")
 
 		if hp <= 0:
 			die()
 
 
 func die():
-	damage_zone.active = false
-	timer.start()
+	respawn_timer.start()
+	dead = true
+	damage_zone.can_damage = false
+
+	var dead_inst =  dead_fx.instance()
+	dead_inst.global_position = global_position
+	fx_container.call_deferred("add_child", dead_inst)
+	anims.play("Dead")
+
 	hide()
 
 
@@ -98,15 +120,32 @@ func enable_disable():
 	if !active:
 		active = true
 
-		if timer.is_stopped():
-			damage_zone.active = true
+		appear_sfx.play()
+
+		# Respawn Enemy
+		if respawn_timer.is_stopped() and dead:
+			hp = max_hp
+			dead = false
+			damage_zone.can_damage = true
 			show()
 
 	else:
 		active = false
+
+		# If still dead, dont respawn
+		if respawn_timer.is_stopped() and dead:
+			respawn_timer.start()
+			dead = false
+			damage_zone.can_damage = false
+			hide()
+
 	set_physics_process(active)
 	damage_zone.set_process(active)
 
 
+
+# Initialization
+func initialize(fx_cont):
+	self.fx_container = fx_cont
 
 

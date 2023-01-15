@@ -1,4 +1,4 @@
-[gd_scene load_steps=65 format=2]
+[gd_scene load_steps=70 format=2]
 
 [ext_resource path="res://addons/sprite_trail/SpriteTrail.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/Player/Player.gd" type="Script" id=2]
@@ -9,10 +9,32 @@
 [ext_resource path="res://Prefabs/FX/Dust_puff.tscn" type="PackedScene" id=7]
 [ext_resource path="res://SFX/Player/Jump.wav" type="AudioStream" id=8]
 [ext_resource path="res://SFX/Player/Whip.wav" type="AudioStream" id=9]
+[ext_resource path="res://SFX/Player/Player_hit.wav" type="AudioStream" id=10]
 
 [sub_resource type="CapsuleShape2D" id=2]
 radius = 4.0
 height = 6.0
+
+[sub_resource type="Shader" id=58]
+code = "shader_type canvas_item;
+
+uniform bool active = false;
+
+void fragment() {
+	vec4 previous_color = texture(TEXTURE, UV);
+	vec4 white_color = vec4(1.0, 1.0, 1.0, previous_color.a);
+	vec4 new_color = previous_color;
+	if (active == true)
+	{
+		new_color = white_color
+	}
+	COLOR = new_color;
+}"
+
+[sub_resource type="ShaderMaterial" id=59]
+resource_local_to_scene = true
+shader = SubResource( 58 )
+shader_param/active = false
 
 [sub_resource type="AtlasTexture" id=3]
 atlas = ExtResource( 3 )
@@ -498,6 +520,63 @@ tracks/3/keys = {
 "values": [ false ]
 }
 
+[sub_resource type="Animation" id=60]
+resource_name = "Hit"
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:material:shader_param/active")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.25 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true, false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("AnimatedSprite:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("SFX/RandomAudioStreamPlayer2D4")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 0.0 ],
+"method": "play"
+} ]
+}
+
+[sub_resource type="Animation" id=61]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:material:shader_param/active")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+
 [sub_resource type="AnimationNodeAnimation" id=37]
 animation = "Attack"
 
@@ -568,6 +647,7 @@ position = Vector2( 0, 1 )
 shape = SubResource( 2 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+material = SubResource( 59 )
 position = Vector2( 0, 8 )
 frames = SubResource( 31 )
 animation = "idle"
@@ -629,10 +709,17 @@ random_volume_range = 0
 random_pitch_range = 0.7
 
 [node name="RandomAudioStreamPlayer2D3" type="AudioStreamPlayer2D" parent="SFX"]
-volume_db = -10.0
+volume_db = -5.0
 bus = "Player"
 script = ExtResource( 4 )
 samples = [ ExtResource( 9 ) ]
+random_volume_range = 0
+random_pitch_range = 0.7
+
+[node name="RandomAudioStreamPlayer2D4" type="AudioStreamPlayer2D" parent="SFX"]
+bus = "Player"
+script = ExtResource( 4 )
+samples = [ ExtResource( 10 ) ]
 random_volume_range = 0
 random_pitch_range = 0.7
 
@@ -657,6 +744,10 @@ anims/Idle = SubResource( 34 )
 anims/Jump = SubResource( 35 )
 anims/Land = SubResource( 52 )
 anims/Walk = SubResource( 36 )
+
+[node name="FX_anims" type="AnimationPlayer" parent="."]
+anims/Hit = SubResource( 60 )
+anims/RESET = SubResource( 61 )
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
 tree_root = SubResource( 49 )

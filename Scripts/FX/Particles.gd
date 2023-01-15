@@ -1,13 +1,15 @@
 extends Node2D
 
-
-onready var particles = $CPUParticles2D
+onready var particles = $Particles
 onready var timer = $Timer
 
 
 # start fx
 func _ready():
-	particles.emitting = true
+	var effects = particles.get_children()
+	for effect in effects:
+		effect.emitting = true
+
 	timer.start()
 
 # End fx

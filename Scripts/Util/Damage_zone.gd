@@ -11,25 +11,22 @@ export (int) var team: int = 1
 export (bool) var constant: bool = false
 export (bool) var can_damage: bool = true
 
-var active: bool = true
-
 
 
 # Damage
 func _on_Damage_zone_body_entered(body: Node):
-	if active and body.has_method("handle_hit") and body.team != team:
+	if body.has_method("handle_hit") and body.team != team:
 		body.handle_hit(damage)
 
 
 
 func _process(delta):
-	if active:
-		if constant:
-			for body in get_overlapping_bodies():
-				if active and body.has_method("handle_hit") and body.team != team:
-					body.handle_hit(damage)
+	if constant:
+		for body in get_overlapping_bodies():
+			if body.has_method("handle_hit") and body.team != team:
+				body.handle_hit(damage)
 
-		collider.disabled = get_can_damage()
+	collider.disabled = get_can_damage()
 
 
 

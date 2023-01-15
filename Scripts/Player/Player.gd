@@ -19,7 +19,7 @@ onready var anims = $AnimationTree
 onready var weapon = $Weapon
 onready var damage_zone = $Weapon/Damage_zone
 
-onready var fx_anims
+onready var fx_anims = $FX_anims
 onready var dust_pos = $Dust_pos
 onready var trail = $AnimatedSprite/SpriteTrail
 
@@ -39,7 +39,7 @@ var motion = Vector2()
 export (int) var hp: int = 3
 export (int) var team: int = 0
 
-# Move bools
+# Move checks
 export (bool) var locked: bool = false
 var can_jump: bool = true
 var walking: bool = false
@@ -151,7 +151,7 @@ func handle_hit(damage):
 		i_frames.start()
 		hp -= damage
 
-		#fx_anims.play("Hit")
+		fx_anims.play("Hit")
 
 		if hp <= 0:
 			die()
