@@ -685,6 +685,7 @@ collision_mask = 7
 script = ExtResource( 6 )
 team = 0
 can_damage = false
+juice = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Weapon/Damage_zone"]
 position = Vector2( 14, 1.5 )

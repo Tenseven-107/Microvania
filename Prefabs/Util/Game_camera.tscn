@@ -11,9 +11,21 @@ smoothing_enabled = true
 smoothing_speed = 10.0
 script = ExtResource( 1 )
 
+[node name="Screenshake_tween" type="Tween" parent="."]
+
+[node name="Hitstop_tween" type="Tween" parent="."]
+
+[node name="Screenshake_timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Hitstop_timer" type="Timer" parent="."]
+one_shot = true
+
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource( 51 )
 
+[connection signal="timeout" from="Screenshake_timer" to="." method="_on_Screenshake_timer_timeout"]
+[connection signal="timeout" from="Hitstop_timer" to="." method="_on_Hitstop_timer_timeout"]
 [connection signal="body_exited" from="Area2D" to="." method="_on_Area2D_body_exited"]

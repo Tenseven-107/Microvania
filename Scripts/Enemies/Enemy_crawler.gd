@@ -135,7 +135,7 @@ func enable_disable():
 		# If still dead, dont respawn
 		if respawn_timer.is_stopped() and dead:
 			respawn_timer.start()
-			dead = false
+			dead = true
 			damage_zone.can_damage = false
 			hide()
 

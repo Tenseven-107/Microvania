@@ -4,12 +4,17 @@ class_name DamageZone
 
 onready var collider = $CollisionShape2D
 
-
+# Damage
 export (int) var damage: int = 1
 export (int) var team: int = 1
 
 export (bool) var constant: bool = false
 export (bool) var can_damage: bool = true
+
+# Juice
+export (bool) var juice: bool = false
+export (float, 0, 10) var screenshake: float = 1
+export (float, 0, 1) var hitstop_time: float = 0.1
 
 
 
@@ -17,6 +22,10 @@ export (bool) var can_damage: bool = true
 func _on_Damage_zone_body_entered(body: Node):
 	if body.has_method("handle_hit") and body.team != team:
 		body.handle_hit(damage)
+
+		if juice:
+			GlobalSignals.emit_signal("screenshake", screenshake, 0.05)
+			GlobalSignals.emit_signal("hitstop", hitstop_time)
 
 
 

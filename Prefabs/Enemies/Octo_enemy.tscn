@@ -182,7 +182,7 @@ anims/Hit = SubResource( 111 )
 anims/RESET = SubResource( 112 )
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
-position = Vector2( 1.19209e-07, -2.38419e-07 )
-scale = Vector2( 0.7, 0.4 )
+position = Vector2( -7.15256e-07, -2.38419e-07 )
+scale = Vector2( 1.6, 1.6 )
 
 [connection signal="body_entered" from="Damage_zone" to="Damage_zone" method="_on_Damage_zone_body_entered"]

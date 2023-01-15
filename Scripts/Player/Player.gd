@@ -152,6 +152,8 @@ func handle_hit(damage):
 		hp -= damage
 
 		fx_anims.play("Hit")
+		GlobalSignals.emit_signal("screenshake", 5, 0.1)
+		GlobalSignals.emit_signal("hitstop", 0.5)
 
 		if hp <= 0:
 			die()
