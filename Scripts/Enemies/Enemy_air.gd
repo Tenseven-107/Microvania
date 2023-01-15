@@ -1,5 +1,6 @@
 extends KinematicBody2D
 
+
 onready var sprite = $AnimatedSprite
 
 onready var vis = $VisibilityNotifier2D
@@ -25,10 +26,9 @@ export (int) var team: int = 1
 
 # Movement Variables
 export (float) var max_speed: float = 10
-
+var speed: float = 10
 var velocity: Vector2
-var move: Vector2
-var rotating: int
+onready var pos_x: float
 
 # Checks
 var active: bool = false
@@ -39,6 +39,7 @@ var dead: bool = false
 # Set up
 func _ready():
 	damage_zone.team = self.team
+	pos_x = position.x
 
 	set_physics_process(active)
 	damage_zone.set_process(active)
@@ -53,40 +54,16 @@ func _physics_process(delta):
 	if respawn_timer.is_stopped() and !dead:
 		sprite.playing = true
 
-		if rotating:
-			rotation = lerp_angle(rotation, velocity.angle(), 0.5)
-			rotating -= 1
+		velocity.x = speed
+		if is_on_wall():
+			if position.x < pos_x:
+				speed = max_speed
+			elif position.x > pos_x:
+				speed = -max_speed
 
-			return
+		velocity = move_and_slide(velocity)
 
-		var collision = move_and_collide(move * max_speed * delta)
-		if collision and collision.normal.rotated(PI/2).dot(move) < 0.5:
-			rotating = 4
-			move = collision.normal.rotated(PI/2)
-
-			return
-
-		var pos = position
-		collision = move_and_collide(move.rotated(PI/2) * 15)
-
-		if not collision:
-			for i in 10:
-				position = pos
-				rotate(PI/32)
-
-				move = move.rotated(PI/32)
-				collision = move_and_collide(move.rotated(PI/2) * 15)
-
-				if collision:
-					move = collision.normal.rotated(PI/2)
-					rotation = move.angle()
-
-					break
-
-		else:
-			move = collision.normal.rotated(PI/2)
-			rotation = move.angle()
-		# Place the enemy at the edge of a platue one pixel deep.
+		# Place the enemy in the air
 
 
 
@@ -147,5 +124,6 @@ func enable_disable():
 # Initialization
 func initialize(fx_cont):
 	self.fx_container = fx_cont
+
 
 

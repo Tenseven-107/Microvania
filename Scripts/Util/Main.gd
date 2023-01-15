@@ -14,3 +14,5 @@ func _ready():
 	camera.initialize(player)
 	player.initialize(fx_container)
 	enemy_container.initialize(fx_container)
+
+	MusicPlayer.play_song(0)
