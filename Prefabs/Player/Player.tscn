@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=2]
+[gd_scene load_steps=65 format=2]
 
 [ext_resource path="res://addons/sprite_trail/SpriteTrail.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/Player/Player.gd" type="Script" id=2]
@@ -6,6 +6,9 @@
 [ext_resource path="res://addons/randomAudioStreamPlayer/random_audio_stream_player_2D.gd" type="Script" id=4]
 [ext_resource path="res://SFX/Player/cartoony_step_1.wav" type="AudioStream" id=5]
 [ext_resource path="res://Scripts/Util/Damage_zone.gd" type="Script" id=6]
+[ext_resource path="res://Prefabs/FX/Dust_puff.tscn" type="PackedScene" id=7]
+[ext_resource path="res://SFX/Player/Jump.wav" type="AudioStream" id=8]
+[ext_resource path="res://SFX/Player/Whip.wav" type="AudioStream" id=9]
 
 [sub_resource type="CapsuleShape2D" id=2]
 radius = 4.0
@@ -207,17 +210,31 @@ tracks/2/keys = {
 "update": 1,
 "values": [ true, false ]
 }
-tracks/3/type = "value"
-tracks/3/path = NodePath("Weapon/Damage_zone/CollisionShape2D:disabled")
+tracks/3/type = "method"
+tracks/3/path = NodePath("SFX/RandomAudioStreamPlayer2D3")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 0, 0.08, 0.14, 0.28 ),
+"times": PoolRealArray( 0.04 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 0.0 ],
+"method": "play"
+} ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Weapon/Damage_zone:can_damage")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.04, 0.09, 0.28 ),
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 1,
-"values": [ true, true, false, true ]
+"values": [ false, false, true, false ]
 }
 
 [sub_resource type="Animation" id=33]
@@ -249,7 +266,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2 ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("Weapon/Damage_zone/CollisionShape2D:disabled")
+tracks/2/path = NodePath("Weapon/Damage_zone:can_damage")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -258,7 +275,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ true ]
+"values": [ false ]
 }
 
 [sub_resource type="Animation" id=34]
@@ -314,7 +331,7 @@ tracks/3/keys = {
 "values": [ false ]
 }
 tracks/4/type = "value"
-tracks/4/path = NodePath("Weapon/Damage_zone/CollisionShape2D:disabled")
+tracks/4/path = NodePath("Weapon/Damage_zone:can_damage")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/imported = false
@@ -323,7 +340,7 @@ tracks/4/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ true ]
+"values": [ false ]
 }
 
 [sub_resource type="Animation" id=35]
@@ -354,8 +371,8 @@ tracks/1/keys = {
 "update": 1,
 "values": [ 0, 1, 2, 3 ]
 }
-tracks/2/type = "value"
-tracks/2/path = NodePath("Weapon/Damage_zone/CollisionShape2D:disabled")
+tracks/2/type = "method"
+tracks/2/path = NodePath("SFX/RandomAudioStreamPlayer2D2")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -363,8 +380,22 @@ tracks/2/enabled = true
 tracks/2/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 0.0 ],
+"method": "play"
+} ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Weapon/Damage_zone:can_damage")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ true ]
+"values": [ false ]
 }
 
 [sub_resource type="Animation" id=52]
@@ -530,6 +561,7 @@ graph_offset = Vector2( -63, 50 )
 
 [node name="Player" type="KinematicBody2D"]
 script = ExtResource( 2 )
+dust_puff = ExtResource( 7 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 1 )
@@ -572,12 +604,12 @@ collision_layer = 7
 collision_mask = 7
 script = ExtResource( 6 )
 team = 0
+can_damage = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Weapon/Damage_zone"]
 position = Vector2( 14, 1.5 )
 rotation = -1.5708
 shape = SubResource( 57 )
-disabled = true
 
 [node name="SFX" type="Node2D" parent="."]
 
@@ -585,6 +617,22 @@ disabled = true
 bus = "Player"
 script = ExtResource( 4 )
 samples = [ ExtResource( 5 ) ]
+random_volume_range = 0
+random_pitch_range = 0.7
+
+[node name="RandomAudioStreamPlayer2D2" type="AudioStreamPlayer2D" parent="SFX"]
+volume_db = -10.0
+bus = "Player"
+script = ExtResource( 4 )
+samples = [ ExtResource( 8 ) ]
+random_volume_range = 0
+random_pitch_range = 0.7
+
+[node name="RandomAudioStreamPlayer2D3" type="AudioStreamPlayer2D" parent="SFX"]
+volume_db = -10.0
+bus = "Player"
+script = ExtResource( 4 )
+samples = [ ExtResource( 9 ) ]
 random_volume_range = 0
 random_pitch_range = 0.7
 

@@ -20,7 +20,7 @@ onready var weapon = $Weapon
 onready var damage_zone = $Weapon/Damage_zone
 
 onready var fx_anims
-onready var dust_pos
+onready var dust_pos = $Dust_pos
 onready var trail = $AnimatedSprite/SpriteTrail
 
 
@@ -117,9 +117,9 @@ func _physics_process(delta):
 		can_jump = false
 		coyote.stop()
 
-		#var dust_inst =  dust_puff.instance()
-		#dust_inst.global_position = dust_pos.global_position
-		#fx_container.call_deferred("add_child", dust_inst)
+		var dust_inst =  dust_puff.instance()
+		dust_inst.global_position = dust_pos.global_position
+		fx_container.call_deferred("add_child", dust_inst)
 
 		anim_state_machine.start("Jump")
 		trail.active = true
@@ -155,6 +155,7 @@ func handle_hit(damage):
 
 		if hp <= 0:
 			die()
+	print("player hit")
 
 
 func die():

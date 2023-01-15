@@ -40,14 +40,20 @@ shape = SubResource( 108 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 106 )
+speed_scale = 1.2
 offset = Vector2( 0, -3 )
 
 [node name="Damage_zone" type="Area2D" parent="."]
 script = ExtResource( 3 )
+constant = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Damage_zone"]
 position = Vector2( 0, 1 )
 shape = SubResource( 107 )
+
+[node name="Respawn_timer" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
 position = Vector2( 1.19209e-07, -2.38419e-07 )
