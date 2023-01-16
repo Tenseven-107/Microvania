@@ -20,8 +20,9 @@ onready var weapon = $Weapon
 onready var damage_zone = $Weapon/Damage_zone
 
 onready var fx_anims = $FX_anims
-onready var dust_pos = $Dust_pos
+onready var dust_pos = $FX/Dust_pos
 onready var trail = $AnimatedSprite/SpriteTrail
+onready var move_dust = $FX/CPUParticles2D
 
 
 var anim_state_machine: AnimationNodeStateMachinePlayback
@@ -38,11 +39,11 @@ var motion = Vector2()
 # Stats
 export (int) var hp: int = 3
 export (int) var team: int = 0
+export (bool) var dead: bool = false
 
 # Move checks
 export (bool) var locked: bool = false
 var can_jump: bool = true
-var walking: bool = false
 
 # Misc
 var camera = null
@@ -68,7 +69,10 @@ func _physics_process(delta):
 
 	if !is_on_floor():
 		anim_state_machine.travel("Fall")
+
 		trail.active = false
+		if move_dust.emitting:
+			move_dust.emitting = false
 	else:
 		anim_state_machine.start("Land")
 
@@ -82,24 +86,29 @@ func _physics_process(delta):
 			weapon.scale.x = 1
 
 			sprite.flip_h = false
-			walking = true
 		elif Input.is_action_pressed("left"):
 			motion.x -= acceleration
 			weapon.scale.x = -1
 
 			sprite.flip_h = true
-			walking = true
 		else: 
-			motion.x = lerp(motion.x, 0, 0.4)
-			walking = false
+			motion.x = move_toward(motion.x, 0, delta * (speed * 4))
 
 	else:
 		motion.x = 0
 
-	if walking and is_on_floor():
+	if motion.x != 0 and is_on_floor():
 		anim_state_machine.travel("Walk")
-	elif !walking and is_on_floor():
+
+		if (motion.x == (speed + acceleration) 
+		or motion.x == -(speed + acceleration)):
+			move_dust.emitting = true
+		else:
+			move_dust.emitting = false
+
+	elif motion.x == 0 and is_on_floor():
 		anim_state_machine.travel("Idle")
+		move_dust.emitting = false
 
 
 	# Jumping
@@ -144,7 +153,6 @@ func _physics_process(delta):
 
 
 
-
 # Taking damage
 func handle_hit(damage):
 	if i_frames.is_stopped():
@@ -161,6 +169,7 @@ func handle_hit(damage):
 
 
 func die():
+	dead = true
 	queue_free()
 
 

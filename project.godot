@@ -18,10 +18,16 @@ _global_script_classes=[ {
 "class": "Player",
 "language": "GDScript",
 "path": "res://Scripts/Player/Player.gd"
+}, {
+"base": "Node",
+"class": "RNG",
+"language": "GDScript",
+"path": "res://Scripts/Util/Loot_generator.gd"
 } ]
 _global_script_class_icons={
 "DamageZone": "",
-"Player": ""
+"Player": "",
+"RNG": ""
 }
 
 [application]

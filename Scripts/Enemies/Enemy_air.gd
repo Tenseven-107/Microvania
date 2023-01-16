@@ -9,7 +9,6 @@ onready var damage_zone = $Damage_zone
 onready var respawn_timer = $Respawn_timer
 
 onready var anims = $Anims
-
 onready var appear_sfx = $SFX/RandomAudioStreamPlayer2D3
 
 var fx_container = null
@@ -39,6 +38,10 @@ var dead: bool = false
 # Set up
 func _ready():
 	damage_zone.team = self.team
+
+	speed = max_speed
+	hp = max_hp
+
 	pos_x = position.x
 
 	set_physics_process(active)

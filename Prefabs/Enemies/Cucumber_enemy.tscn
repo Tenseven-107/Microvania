@@ -1,0 +1,202 @@
+[gd_scene load_steps=21 format=2]
+
+[ext_resource path="res://Scripts/Enemies/Enemy_walker.gd" type="Script" id=1]
+[ext_resource path="res://SFX/Enemies/Jelly_2.wav" type="AudioStream" id=2]
+[ext_resource path="res://SFX/Enemies/Jelly_1.wav" type="AudioStream" id=3]
+[ext_resource path="res://Sprites/Enemies/Enemy_6.png" type="Texture" id=5]
+[ext_resource path="res://addons/randomAudioStreamPlayer/random_audio_stream_player_2D.gd" type="Script" id=6]
+[ext_resource path="res://SFX/Enemies/Enemy_death.wav" type="AudioStream" id=7]
+[ext_resource path="res://SFX/Enemies/Enemy_hurt.wav" type="AudioStream" id=8]
+[ext_resource path="res://Prefabs/FX/Enemy_death.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Scripts/Util/Damage_zone.gd" type="Script" id=10]
+
+[sub_resource type="RectangleShape2D" id=59]
+extents = Vector2( 7.5, 6.5 )
+
+[sub_resource type="Shader" id=58]
+code = "shader_type canvas_item;
+
+uniform bool active = false;
+uniform vec4 flash_color : hint_color = vec4(1);
+
+void fragment() {
+	vec4 previous_color = texture(TEXTURE, UV);
+	vec4 color = vec4(flash_color.r, flash_color.g, flash_color.b, previous_color.a);
+	vec4 new_color = previous_color;
+	if (active == true)
+	{
+		new_color = color
+	}
+	COLOR = new_color;
+}"
+
+[sub_resource type="ShaderMaterial" id=60]
+resource_local_to_scene = true
+shader = SubResource( 58 )
+shader_param/active = false
+shader_param/flash_color = Color( 1, 0.309804, 0.411765, 1 )
+
+[sub_resource type="AtlasTexture" id=69]
+atlas = ExtResource( 5 )
+region = Rect2( 0, 0, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=70]
+atlas = ExtResource( 5 )
+region = Rect2( 16, 0, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=71]
+atlas = ExtResource( 5 )
+region = Rect2( 32, 0, 16, 16 )
+
+[sub_resource type="SpriteFrames" id=72]
+animations = [ {
+"frames": [ SubResource( 69 ), SubResource( 70 ), SubResource( 71 ), SubResource( 70 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=65]
+extents = Vector2( 5, 5.5 )
+
+[sub_resource type="Animation" id=66]
+resource_name = "Dead"
+length = 0.001
+tracks/0/type = "method"
+tracks/0/path = NodePath("SFX/RandomAudioStreamPlayer2D2")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 0.0 ],
+"method": "play"
+} ]
+}
+
+[sub_resource type="Animation" id=67]
+resource_name = "Hit"
+length = 0.3
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:material:shader_param/active")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.15, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true, false ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath("SFX/RandomAudioStreamPlayer2D")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 0.0 ],
+"method": "play"
+} ]
+}
+
+[sub_resource type="Animation" id=68]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:material:shader_param/active")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+
+[node name="Cucumber_enemy" type="KinematicBody2D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource( 1 )
+dead_fx = ExtResource( 9 )
+max_hp = 4
+max_speed = 30.0
+flip_sprite = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0.5, -1.5 )
+shape = SubResource( 59 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+material = SubResource( 60 )
+frames = SubResource( 72 )
+frame = 2
+speed_scale = 1.5
+offset = Vector2( 0, -3 )
+flip_h = true
+
+[node name="Damage_zone" type="Area2D" parent="."]
+script = ExtResource( 10 )
+constant = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Damage_zone"]
+position = Vector2( 0, -1.5 )
+shape = SubResource( 65 )
+
+[node name="Respawn_timer" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2( 7, 5 )
+enabled = true
+cast_to = Vector2( 0, 10 )
+collision_mask = 2
+
+[node name="SFX" type="Node2D" parent="."]
+
+[node name="RandomAudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="SFX"]
+bus = "Enemies"
+script = ExtResource( 6 )
+samples = [ ExtResource( 8 ) ]
+random_strategy = 1
+random_volume_range = 0
+random_pitch_range = 0.7
+
+[node name="RandomAudioStreamPlayer2D2" type="AudioStreamPlayer2D" parent="SFX"]
+bus = "Enemies"
+script = ExtResource( 6 )
+samples = [ ExtResource( 7 ) ]
+random_strategy = 1
+random_volume_range = 0
+random_pitch_range = 0.5
+
+[node name="RandomAudioStreamPlayer2D3" type="AudioStreamPlayer2D" parent="SFX"]
+bus = "Enemies atmospheric"
+script = ExtResource( 6 )
+__meta__ = {
+"_editor_description_": ""
+}
+samples = [ ExtResource( 3 ), ExtResource( 2 ) ]
+random_volume_range = 0
+random_pitch_range = 1.0
+
+[node name="Anims" type="AnimationPlayer" parent="."]
+anims/Dead = SubResource( 66 )
+anims/Hit = SubResource( 67 )
+anims/RESET = SubResource( 68 )
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+position = Vector2( -7.15256e-07, -2.38419e-07 )
+scale = Vector2( 1.6, 1.6 )
+
+[connection signal="body_entered" from="Damage_zone" to="Damage_zone" method="_on_Damage_zone_body_entered"]

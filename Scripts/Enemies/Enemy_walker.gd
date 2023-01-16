@@ -1,8 +1,9 @@
 extends KinematicBody2D
 
 
-
 onready var sprite = $AnimatedSprite
+
+onready var raycast = $RayCast2D
 
 onready var vis = $VisibilityNotifier2D
 onready var damage_zone = $Damage_zone
@@ -26,12 +27,16 @@ export (int) var team: int = 1
 
 # Movement Variables
 export (float) var max_speed: float = 10
+var speed: float = 10
+
+var pos_x: float
+var ray_pos_x: float
 
 var velocity: Vector2
-var move: Vector2
-var rotating: int
 
 # Checks
+export (bool) var flip_sprite: bool = true
+
 var active: bool = false
 var dead: bool = false
 
@@ -41,7 +46,13 @@ var dead: bool = false
 func _ready():
 	damage_zone.team = self.team
 
+	speed = max_speed
 	hp = max_hp
+
+	pos_x = position.x
+	ray_pos_x = raycast.position.x
+	if raycast.position.x < 0:
+		ray_pos_x = -raycast.position.x
 
 	set_physics_process(active)
 	damage_zone.set_process(active)
@@ -56,40 +67,26 @@ func _physics_process(delta):
 	if respawn_timer.is_stopped() and !dead:
 		sprite.playing = true
 
-		if rotating:
-			rotation = lerp_angle(rotation, velocity.angle(), 0.5)
-			rotating -= 1
+		velocity.x = speed
+		if !raycast.is_colliding() or is_on_wall():
+			if position.x < pos_x:
+				speed = max_speed
 
-			return
+				if flip_sprite:
+					sprite.flip_h = true
 
-		var collision = move_and_collide(move * max_speed * delta)
-		if collision and collision.normal.rotated(PI/2).dot(move) < 0.5:
-			rotating = 4
-			move = collision.normal.rotated(PI/2)
+				raycast.position.x = ray_pos_x
+			elif position.x > pos_x:
+				speed = -max_speed
 
-			return
+				if flip_sprite:
+					sprite.flip_h = false
 
-		var pos = position
-		collision = move_and_collide(move.rotated(PI/2) * 15)
+				raycast.position.x = -ray_pos_x
 
-		if not collision:
-			for i in 10:
-				position = pos
-				rotate(PI/32)
+		velocity = move_and_slide(velocity, Vector2.UP)
 
-				move = move.rotated(PI/32)
-				collision = move_and_collide(move.rotated(PI/2) * 15)
-
-				if collision:
-					move = collision.normal.rotated(PI/2)
-					rotation = move.angle()
-
-					break
-
-		else:
-			move = collision.normal.rotated(PI/2)
-			rotation = move.angle()
-		# Place the enemy at the edge of a platue one pixel deep.
+		# Place the enemy on the ground
 
 
 
@@ -150,5 +147,6 @@ func enable_disable():
 # Initialization
 func initialize(fx_cont):
 	self.fx_container = fx_cont
+
 
 

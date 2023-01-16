@@ -1,4 +1,4 @@
-[gd_scene load_steps=70 format=2]
+[gd_scene load_steps=79 format=2]
 
 [ext_resource path="res://addons/sprite_trail/SpriteTrail.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/Player/Player.gd" type="Script" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://SFX/Player/Jump.wav" type="AudioStream" id=8]
 [ext_resource path="res://SFX/Player/Whip.wav" type="AudioStream" id=9]
 [ext_resource path="res://SFX/Player/Player_hit.wav" type="AudioStream" id=10]
+[ext_resource path="res://Sprites/FX/Dust_puff.png" type="Texture" id=11]
 
 [sub_resource type="CapsuleShape2D" id=2]
 radius = 4.0
@@ -128,6 +129,18 @@ region = Rect2( 48, 64, 48, 16 )
 atlas = ExtResource( 3 )
 region = Rect2( 96, 64, 48, 16 )
 
+[sub_resource type="AtlasTexture" id=62]
+atlas = ExtResource( 3 )
+region = Rect2( 144, 64, 48, 16 )
+
+[sub_resource type="AtlasTexture" id=63]
+atlas = ExtResource( 3 )
+region = Rect2( 192, 64, 48, 16 )
+
+[sub_resource type="AtlasTexture" id=64]
+atlas = ExtResource( 3 )
+region = Rect2( 240, 64, 48, 16 )
+
 [sub_resource type="AtlasTexture" id=26]
 atlas = ExtResource( 3 )
 region = Rect2( 48, 0, 48, 16 )
@@ -180,6 +193,11 @@ animations = [ {
 "name": "shield",
 "speed": 5.0
 }, {
+"frames": [ SubResource( 62 ), SubResource( 63 ), SubResource( 64 ) ],
+"loop": true,
+"name": "throw",
+"speed": 5.0
+}, {
 "frames": [ SubResource( 26 ), SubResource( 27 ), SubResource( 28 ), SubResource( 29 ), SubResource( 30 ) ],
 "loop": true,
 "name": "walk",
@@ -191,6 +209,9 @@ colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 0.392157 )
 
 [sub_resource type="RectangleShape2D" id=57]
 extents = Vector2( 4.5, 11 )
+
+[sub_resource type="Curve" id=69]
+_data = [ Vector2( 0, 0.539773 ), 0.0, 0.0, 0, 0, Vector2( 0.480198, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
 
 [sub_resource type="Animation" id=32]
 resource_name = "Attack"
@@ -461,6 +482,35 @@ tracks/2/keys = {
 "values": [ 0, 0 ]
 }
 
+[sub_resource type="Animation" id=65]
+resource_name = "Throw"
+length = 0.3
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ "throw", "idle" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("AnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 0 ]
+}
+
 [sub_resource type="Animation" id=36]
 resource_name = "Walk"
 length = 0.5
@@ -592,6 +642,9 @@ animation = "Jump"
 [sub_resource type="AnimationNodeAnimation" id=53]
 animation = "Land"
 
+[sub_resource type="AnimationNodeAnimation" id=66]
+animation = "Throw"
+
 [sub_resource type="AnimationNodeAnimation" id=41]
 animation = "Walk"
 
@@ -619,6 +672,12 @@ auto_advance = true
 switch_mode = 2
 auto_advance = true
 
+[sub_resource type="AnimationNodeStateMachineTransition" id=67]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=68]
+switch_mode = 2
+auto_advance = true
+
 [sub_resource type="AnimationNodeStateMachine" id=49]
 states/Attack/node = SubResource( 37 )
 states/Attack/position = Vector2( 706, 90 )
@@ -630,11 +689,13 @@ states/Jump/node = SubResource( 40 )
 states/Jump/position = Vector2( 343, 90 )
 states/Land/node = SubResource( 53 )
 states/Land/position = Vector2( 553, 260 )
+states/Throw/node = SubResource( 66 )
+states/Throw/position = Vector2( 553, -43 )
 states/Walk/node = SubResource( 41 )
 states/Walk/position = Vector2( 706, 211 )
-transitions = [ "Idle", "Attack", SubResource( 42 ), "Attack", "Idle", SubResource( 43 ), "Idle", "Jump", SubResource( 44 ), "Jump", "Fall", SubResource( 45 ), "Idle", "Walk", SubResource( 47 ), "Walk", "Idle", SubResource( 48 ), "Idle", "Fall", SubResource( 51 ), "Fall", "Land", SubResource( 54 ), "Land", "Idle", SubResource( 55 ) ]
+transitions = [ "Idle", "Attack", SubResource( 42 ), "Attack", "Idle", SubResource( 43 ), "Idle", "Jump", SubResource( 44 ), "Jump", "Fall", SubResource( 45 ), "Idle", "Walk", SubResource( 47 ), "Walk", "Idle", SubResource( 48 ), "Idle", "Fall", SubResource( 51 ), "Fall", "Land", SubResource( 54 ), "Land", "Idle", SubResource( 55 ), "Idle", "Throw", SubResource( 67 ), "Throw", "Idle", SubResource( 68 ) ]
 start_node = "Idle"
-graph_offset = Vector2( -63, 50 )
+graph_offset = Vector2( -27, -104 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=50]
 
@@ -692,6 +753,8 @@ position = Vector2( 14, 1.5 )
 rotation = -1.5708
 shape = SubResource( 57 )
 
+[node name="Throwable" type="Node2D" parent="."]
+
 [node name="SFX" type="Node2D" parent="."]
 
 [node name="RandomAudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="SFX"]
@@ -724,6 +787,31 @@ samples = [ ExtResource( 10 ) ]
 random_volume_range = 0
 random_pitch_range = 0.7
 
+[node name="FX" type="Node2D" parent="."]
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="FX"]
+position = Vector2( 0, 8 )
+emitting = false
+lifetime = 0.3
+local_coords = false
+texture = ExtResource( 11 )
+emission_shape = 2
+emission_rect_extents = Vector2( 4, 0 )
+spread = 180.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 10.0
+initial_velocity_random = 1.0
+angle = 720.0
+angle_random = 1.0
+scale_amount = 0.75
+scale_amount_curve = SubResource( 69 )
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="Dust_pos" type="Position2D" parent="FX"]
+position = Vector2( 0, 8 )
+
 [node name="Coyote_time" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
@@ -735,15 +823,13 @@ one_shot = true
 wait_time = 0.5
 one_shot = true
 
-[node name="Dust_pos" type="Position2D" parent="."]
-position = Vector2( 0, 8 )
-
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Attack = SubResource( 32 )
 anims/Fall = SubResource( 33 )
 anims/Idle = SubResource( 34 )
 anims/Jump = SubResource( 35 )
 anims/Land = SubResource( 52 )
+anims/Throw = SubResource( 65 )
 anims/Walk = SubResource( 36 )
 
 [node name="FX_anims" type="AnimationPlayer" parent="."]
