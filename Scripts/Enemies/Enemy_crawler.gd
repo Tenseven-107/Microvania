@@ -109,6 +109,8 @@ func die():
 	dead = true
 	damage_zone.can_damage = false
 
+	GlobalSignals.emit_signal("spawn_item", global_position)
+
 	var dead_inst =  dead_fx.instance()
 	dead_inst.global_position = global_position
 	fx_container.call_deferred("add_child", dead_inst)
