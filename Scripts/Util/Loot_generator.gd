@@ -7,9 +7,9 @@ export (int) var max_number: int = 5
 
 var items: Dictionary = {
 	#"name": {object, chance}
-	0: {"object": null, "chance": 5},
-	1: {"object": preload("res://Prefabs/Items/Misc/HP_pickup.tscn"), "chance": 4},
-	2: {"object": preload("res://Prefabs/Items/Misc/Big_HP_pickup.tscn"), "chance": 2}
+	0: {"object": null, "chance": 6},
+	1: {"object": preload("res://Prefabs/Items/Misc/HP_pickup.tscn"), "chance": 2},
+	2: {"object": preload("res://Prefabs/Items/Misc/Big_HP_pickup.tscn"), "chance": 1}
 }
 
 
@@ -26,7 +26,6 @@ func _ready():
 # Spawn item
 func spawn(pos):
 	var picked_item = pick()
-	print(picked_item)
 
 	if picked_item:
 		var instance = picked_item.instance()
@@ -49,7 +48,6 @@ func pick():
 
 		if item == (size - 1):
 			done = true
-			
 
 	if done:
 		for item in size:
@@ -58,7 +56,7 @@ func pick():
 			var gotten_item = all_items[item].get("object", null)
 			var item_chance = all_items[item].get("chance", null)
 
-			if total_chance and item_chance >= random_number:
+			if total_chance and item_chance >= random_number and item_chance <= random_number:
 				return gotten_item
 
 
