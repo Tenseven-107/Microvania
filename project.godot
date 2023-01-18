@@ -14,8 +14,13 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/Util/Damage_zone.gd"
 }, {
+"base": "Camera2D",
+"class": "GameCamera",
+"language": "GDScript",
+"path": "res://Scripts/Util/Game_camera.gd"
+}, {
 "base": "Node",
-"class": "Loot_generator",
+"class": "LootGenerator",
 "language": "GDScript",
 "path": "res://Scripts/Util/Loot_generator.gd"
 }, {
@@ -23,11 +28,24 @@ _global_script_classes=[ {
 "class": "Player",
 "language": "GDScript",
 "path": "res://Scripts/Player/Player.gd"
+}, {
+"base": "Node2D",
+"class": "ThrowableController",
+"language": "GDScript",
+"path": "res://Scripts/Player/Throwable_controller.gd"
+}, {
+"base": "Area2D",
+"class": "ThrowablePickup",
+"language": "GDScript",
+"path": "res://Scripts/Items/Throwables/Throwable_pickup.gd"
 } ]
 _global_script_class_icons={
 "DamageZone": "",
-"Loot_generator": "",
-"Player": ""
+"GameCamera": "",
+"LootGenerator": "",
+"Player": "",
+"ThrowableController": "",
+"ThrowablePickup": ""
 }
 
 [application]

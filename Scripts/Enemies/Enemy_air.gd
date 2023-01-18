@@ -71,7 +71,7 @@ func _physics_process(delta):
 
 
 # Taking damage
-func handle_hit(damage):
+func handle_hit(damage, null_value):
 	if respawn_timer.is_stopped() and !dead:
 		hp -= damage
 

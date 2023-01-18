@@ -1,5 +1,5 @@
 extends Node
-class_name Loot_generator
+class_name LootGenerator
 
 
 export (int) var max_number: int = 5

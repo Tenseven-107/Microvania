@@ -19,6 +19,8 @@ onready var anims = $AnimationTree
 onready var weapon = $Weapon
 onready var damage_zone = $Weapon/Damage_zone
 
+onready var throwable_controller = $Throwable
+
 onready var fx_anims = $FX_anims
 onready var dust_pos = $FX/Dust_pos
 onready var trail = $AnimatedSprite/SpriteTrail
@@ -38,7 +40,11 @@ var motion = Vector2()
 
 # Stats
 export (int) var hp: int = 3
+export (int) var max_hp: int = 3
 export (int) var team: int = 0
+
+export (int) var power
+
 export (bool) var dead: bool = false
 
 # Move checks
@@ -56,6 +62,7 @@ func _ready():
 	trail.active = false
 
 	damage_zone.team = self.team
+	hp = max_hp
 
 	anim_state_machine = anims.get("parameters/playback")
 
@@ -147,6 +154,10 @@ func _physics_process(delta):
 		anim_state_machine.start("Attack")
 		cooldown.start()
 
+	if Input.is_action_just_pressed("action") and throwable_controller.get_handler():
+		throwable_controller.handle_attack()
+		anim_state_machine.start("Throw")
+
 
 	# Motion
 	motion = move_and_slide(motion, Vector2.UP)
@@ -154,10 +165,10 @@ func _physics_process(delta):
 
 
 # Taking damage
-func handle_hit(damage):
-	if i_frames.is_stopped():
+func handle_hit(value, damaging: bool):
+	if i_frames.is_stopped() and damaging:
 		i_frames.start()
-		hp -= damage
+		hp -= value
 
 		fx_anims.play("Hit")
 		GlobalSignals.emit_signal("screenshake", 5, 0.1)
@@ -165,7 +176,11 @@ func handle_hit(damage):
 
 		if hp <= 0:
 			die()
-	print("player hit")
+
+	elif !damaging:
+		hp += value
+		hp = clamp(hp, 0, max_hp)
+		#fx_anims.play("Heal")
 
 
 func die():
@@ -174,9 +189,16 @@ func die():
 
 
 
+# Getting the throwable controller
+func get_throwable_controller():
+	return throwable_controller
+
+
+
 # Initialization
-func initialize(fx_cont):
+func initialize(fx_cont, pro_cont):
 	self.fx_container = fx_cont
+	throwable_controller.initialize(pro_cont)
 
 
 

@@ -21,7 +21,7 @@ export (float, 0, 1) var hitstop_time: float = 0.1
 # Damage
 func _on_Damage_zone_body_entered(body: Node):
 	if body.has_method("handle_hit") and body.team != team and !body.dead:
-		body.handle_hit(damage)
+		body.handle_hit(damage, true)
 
 		if juice:
 			GlobalSignals.emit_signal("screenshake", screenshake, 0.05)
@@ -33,7 +33,7 @@ func _process(delta):
 	if constant:
 		for body in get_overlapping_bodies():
 			if body.has_method("handle_hit") and body.team != team and !body.dead:
-				body.handle_hit(damage)
+				body.handle_hit(damage, true)
 
 	collider.disabled = get_can_damage()
 

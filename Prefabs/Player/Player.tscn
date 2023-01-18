@@ -1,4 +1,4 @@
-[gd_scene load_steps=79 format=2]
+[gd_scene load_steps=81 format=2]
 
 [ext_resource path="res://addons/sprite_trail/SpriteTrail.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/Player/Player.gd" type="Script" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://SFX/Player/Whip.wav" type="AudioStream" id=9]
 [ext_resource path="res://SFX/Player/Player_hit.wav" type="AudioStream" id=10]
 [ext_resource path="res://Sprites/FX/Dust_puff.png" type="Texture" id=11]
+[ext_resource path="res://Scripts/Player/Throwable_controller.gd" type="Script" id=12]
 
 [sub_resource type="CapsuleShape2D" id=2]
 radius = 4.0
@@ -440,6 +441,20 @@ tracks/3/keys = {
 "update": 1,
 "values": [ false ]
 }
+tracks/4/type = "method"
+tracks/4/path = NodePath("SFX/RandomAudioStreamPlayer2D3")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "stop"
+} ]
+}
 
 [sub_resource type="Animation" id=52]
 resource_name = "Land"
@@ -510,6 +525,18 @@ tracks/1/keys = {
 "update": 1,
 "values": [ 0, 1, 2, 0 ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:locked")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
 
 [sub_resource type="Animation" id=36]
 resource_name = "Walk"
@@ -569,6 +596,9 @@ tracks/3/keys = {
 "update": 1,
 "values": [ false ]
 }
+
+[sub_resource type="Animation" id=70]
+resource_name = "Heal"
 
 [sub_resource type="Animation" id=60]
 resource_name = "Hit"
@@ -754,6 +784,7 @@ rotation = -1.5708
 shape = SubResource( 57 )
 
 [node name="Throwable" type="Node2D" parent="."]
+script = ExtResource( 12 )
 
 [node name="SFX" type="Node2D" parent="."]
 
@@ -833,6 +864,7 @@ anims/Throw = SubResource( 65 )
 anims/Walk = SubResource( 36 )
 
 [node name="FX_anims" type="AnimationPlayer" parent="."]
+anims/Heal = SubResource( 70 )
 anims/Hit = SubResource( 60 )
 anims/RESET = SubResource( 61 )
 

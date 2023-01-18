@@ -1,4 +1,5 @@
 extends Camera2D
+class_name GameCamera
 
 
 onready var screenshake_tween = $Screenshake_tween
