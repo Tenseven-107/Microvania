@@ -110,6 +110,30 @@ tracks/1/keys = {
 "update": 1,
 "values": [ false ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Sprite:scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
+}
 
 [node name="Throwable_knife" type="Area2D"]
 script = ExtResource( 1 )
@@ -126,11 +150,16 @@ texture = SubResource( 2 )
 bus = "Player"
 script = ExtResource( 5 )
 samples = [ ExtResource( 4 ) ]
+random_volume_range = 0
 random_pitch_range = 0.5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Collected = SubResource( 4 )
 anims/RESET = SubResource( 5 )
 
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+position = Vector2( -3.27826e-07, -8.9407e-08 )
+scale = Vector2( 0.5, 0.5 )
+
 [connection signal="body_entered" from="." to="." method="_on_Throwable_knife_body_entered"]
-[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="screen_entered" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_entered"]

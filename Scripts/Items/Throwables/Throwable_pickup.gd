@@ -17,6 +17,6 @@ func _on_Throwable_knife_body_entered(body: Player):
 
 
 
-# Delete
-func _on_AnimationPlayer_animation_finished(anim_name = "Collected"):
-	queue_free()
+# When the upgrade gets back in the screen
+func _on_VisibilityNotifier2D_screen_entered():
+	anims.play("RESET")
