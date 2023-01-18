@@ -12,30 +12,15 @@
 [ext_resource path="res://SFX/Player/Player_hit.wav" type="AudioStream" id=10]
 [ext_resource path="res://Sprites/FX/Dust_puff.png" type="Texture" id=11]
 [ext_resource path="res://Scripts/Player/Throwable_controller.gd" type="Script" id=12]
+[ext_resource path="res://Scripts/FX/Flash.gdshader" type="Shader" id=13]
 
 [sub_resource type="CapsuleShape2D" id=2]
 radius = 4.0
 height = 6.0
 
-[sub_resource type="Shader" id=58]
-code = "shader_type canvas_item;
-
-uniform bool active = false;
-
-void fragment() {
-	vec4 previous_color = texture(TEXTURE, UV);
-	vec4 white_color = vec4(1.0, 1.0, 1.0, previous_color.a);
-	vec4 new_color = previous_color;
-	if (active == true)
-	{
-		new_color = white_color
-	}
-	COLOR = new_color;
-}"
-
 [sub_resource type="ShaderMaterial" id=59]
 resource_local_to_scene = true
-shader = SubResource( 58 )
+shader = ExtResource( 13 )
 shader_param/active = false
 
 [sub_resource type="AtlasTexture" id=3]

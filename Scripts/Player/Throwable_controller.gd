@@ -8,6 +8,8 @@ var child_count: int
 var projectile_container = null
 var handler = null
 
+var team: int = 0
+
 
 # Updates the children
 func update_controller(throwable):
@@ -15,6 +17,7 @@ func update_controller(throwable):
 	instance.initialize(projectile_container)
 
 	handler = instance
+	instance.team = self.team
 	self.add_child(instance)
 
 	child_count = self.get_child_count()
@@ -27,14 +30,23 @@ func update_controller(throwable):
 
 # Handles attacks
 func handle_attack():
-	if is_instance_valid(handler):
+	var power = get_parent().power
+	if is_instance_valid(handler) and power > 0:
 		handler.attack()
 
+		get_parent().power -= 1
+		if power <= 0:
+			power = 0
 
 
-# Get handler
+
+# Getters
 func get_handler():
 	return handler
+
+func get_handler_stopped():
+	if is_instance_valid(handler):
+		return handler.get_if_stopped()
 
 
 

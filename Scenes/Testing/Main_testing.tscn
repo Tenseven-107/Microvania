@@ -1154,4 +1154,4 @@ position = Vector2( 230, -20 )
 [node name="Loot_generator" parent="." instance=ExtResource( 10 )]
 
 [node name="Throwable_knife" parent="." instance=ExtResource( 9 )]
-position = Vector2( -36, 268 )
+position = Vector2( 365, 172 )

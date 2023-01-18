@@ -43,7 +43,7 @@ export (int) var hp: int = 3
 export (int) var max_hp: int = 3
 export (int) var team: int = 0
 
-export (int) var power
+export (int) var power: int = 0
 
 export (bool) var dead: bool = false
 
@@ -62,6 +62,7 @@ func _ready():
 	trail.active = false
 
 	damage_zone.team = self.team
+	throwable_controller.team = self.team
 	hp = max_hp
 
 	anim_state_machine = anims.get("parameters/playback")
@@ -91,11 +92,13 @@ func _physics_process(delta):
 		if Input.is_action_pressed("right"):
 			motion.x += acceleration
 			weapon.scale.x = 1
+			throwable_controller.scale.x = 1
 
 			sprite.flip_h = false
 		elif Input.is_action_pressed("left"):
 			motion.x -= acceleration
 			weapon.scale.x = -1
+			throwable_controller.scale.x = -1
 
 			sprite.flip_h = true
 		else: 
@@ -154,7 +157,8 @@ func _physics_process(delta):
 		anim_state_machine.start("Attack")
 		cooldown.start()
 
-	if Input.is_action_just_pressed("action") and throwable_controller.get_handler():
+	if (Input.is_action_just_pressed("action") and throwable_controller.get_handler() 
+	and throwable_controller.get_handler_stopped() and power > 0):
 		throwable_controller.handle_attack()
 		anim_state_machine.start("Throw")
 

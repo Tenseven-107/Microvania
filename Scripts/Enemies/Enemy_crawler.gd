@@ -132,6 +132,7 @@ func enable_disable():
 			hp = max_hp
 			dead = false
 			damage_zone.can_damage = true
+			anims.play("RESET")
 			show()
 
 	else:
