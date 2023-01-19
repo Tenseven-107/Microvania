@@ -4,6 +4,8 @@ extends KinematicBody2D
 
 onready var sprite = $AnimatedSprite
 
+onready var collider = $CollisionShape2D
+
 onready var vis = $VisibilityNotifier2D
 onready var damage_zone = $Damage_zone
 
@@ -69,12 +71,12 @@ func _physics_process(delta):
 
 			return
 
-		var pos = position
+		var pos = global_position
 		collision = move_and_collide(move.rotated(PI/2) * 15)
 
 		if not collision:
 			for i in 10:
-				position = pos
+				global_position = pos
 				rotate(PI/32)
 
 				move = move.rotated(PI/32)
@@ -107,7 +109,9 @@ func handle_hit(damage, null_value):
 func die():
 	respawn_timer.start()
 	dead = true
+
 	damage_zone.can_damage = false
+	collider.set_deferred("disabled", true)
 
 	GlobalSignals.emit_signal("spawn_item", global_position)
 
@@ -131,7 +135,10 @@ func enable_disable():
 		if respawn_timer.is_stopped() and dead:
 			hp = max_hp
 			dead = false
+
 			damage_zone.can_damage = true
+			collider.set_deferred("disabled", false)
+
 			anims.play("RESET")
 			show()
 
@@ -142,7 +149,10 @@ func enable_disable():
 		if respawn_timer.is_stopped() and dead:
 			respawn_timer.start()
 			dead = true
+
 			damage_zone.can_damage = false
+			collider.set_deferred("disabled", true)
+
 			hide()
 
 	set_physics_process(active)

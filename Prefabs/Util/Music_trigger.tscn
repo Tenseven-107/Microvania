@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/Util/Music_trigger.gd" type="Script" id=1]
+
+[node name="Music_trigger" type="Area2D"]
+script = ExtResource( 1 )
+
+[connection signal="body_entered" from="." to="." method="_on_Music_trigger_body_entered"]
