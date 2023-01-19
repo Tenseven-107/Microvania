@@ -11,7 +11,7 @@ enum themes {
 
 var tracks = {
 	themes.CRASHLANDED: [preload("res://SFX/Music/Crash_Landed-Tenseven.mp3")],
-	themes.BLUEPLANET: [preload("res://SFX/Enemies/Enemy_hurt.wav")],
+	themes.BLUEPLANET: [preload("res://SFX/Music/Blue_Planet-Tenseven.mp3")],
 	themes.GOLDENGRASS: [preload("res://SFX/Enemies/Enemy_death.wav")]
 }
 

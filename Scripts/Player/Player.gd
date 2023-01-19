@@ -184,7 +184,7 @@ func handle_hit(value, damaging: bool):
 	elif !damaging:
 		hp += value
 		hp = clamp(hp, 0, max_hp)
-		#fx_anims.play("Heal")
+		fx_anims.play("Heal")
 
 
 func die():

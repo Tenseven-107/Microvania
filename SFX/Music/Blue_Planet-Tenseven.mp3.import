@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/Blue_Planet-Tenseven.mp3-841b2c04c670cde4b4f51e2d3b6e867e.mp3str"
+
+[deps]
+
+source_file="res://SFX/Music/Blue_Planet-Tenseven.mp3"
+dest_files=[ "res://.import/Blue_Planet-Tenseven.mp3-841b2c04c670cde4b4f51e2d3b6e867e.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

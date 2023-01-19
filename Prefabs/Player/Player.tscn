@@ -1,4 +1,4 @@
-[gd_scene load_steps=81 format=2]
+[gd_scene load_steps=83 format=2]
 
 [ext_resource path="res://addons/sprite_trail/SpriteTrail.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/Player/Player.gd" type="Script" id=2]
@@ -13,6 +13,8 @@
 [ext_resource path="res://Sprites/FX/Dust_puff.png" type="Texture" id=11]
 [ext_resource path="res://Scripts/Player/Throwable_controller.gd" type="Script" id=12]
 [ext_resource path="res://Scripts/FX/Flash.gdshader" type="Shader" id=13]
+[ext_resource path="res://SFX/Player/Heal.wav" type="AudioStream" id=14]
+[ext_resource path="res://SFX/Player/Throw_sound.wav" type="AudioStream" id=15]
 
 [sub_resource type="CapsuleShape2D" id=2]
 radius = 4.0
@@ -22,6 +24,7 @@ height = 6.0
 resource_local_to_scene = true
 shader = ExtResource( 13 )
 shader_param/active = false
+shader_param/color = Color( 1, 1, 1, 1 )
 
 [sub_resource type="AtlasTexture" id=3]
 atlas = ExtResource( 3 )
@@ -522,6 +525,20 @@ tracks/2/keys = {
 "update": 1,
 "values": [ true, false ]
 }
+tracks/3/type = "method"
+tracks/3/path = NodePath("SFX/RandomAudioStreamPlayer2D6")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 0.0 ],
+"method": "play"
+} ]
+}
 
 [sub_resource type="Animation" id=36]
 resource_name = "Walk"
@@ -584,6 +601,45 @@ tracks/3/keys = {
 
 [sub_resource type="Animation" id=70]
 resource_name = "Heal"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:material:shader_param/active")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("AnimatedSprite:material:shader_param/color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 0.286275, 0.905882, 0.92549, 1 ), Color( 0.286275, 0.905882, 0.92549, 1 ), Color( 1, 0.854902, 0.270588, 1 ) ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("SFX/RandomAudioStreamPlayer2D5")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 0.0 ],
+"method": "play"
+} ]
+}
 
 [sub_resource type="Animation" id=60]
 resource_name = "Hit"
@@ -626,6 +682,18 @@ tracks/2/keys = {
 "method": "play"
 } ]
 }
+tracks/3/type = "value"
+tracks/3/path = NodePath("AnimatedSprite:material:shader_param/color")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
 
 [sub_resource type="Animation" id=61]
 length = 0.001
@@ -640,6 +708,18 @@ tracks/0/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("AnimatedSprite:material:shader_param/color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
 }
 
 [sub_resource type="AnimationNodeAnimation" id=37]
@@ -800,6 +880,21 @@ random_pitch_range = 0.7
 bus = "Player"
 script = ExtResource( 4 )
 samples = [ ExtResource( 10 ) ]
+random_volume_range = 0
+random_pitch_range = 0.7
+
+[node name="RandomAudioStreamPlayer2D5" type="AudioStreamPlayer2D" parent="SFX"]
+bus = "Player"
+script = ExtResource( 4 )
+samples = [ ExtResource( 14 ) ]
+random_volume_range = 0
+random_pitch_range = 0.7
+
+[node name="RandomAudioStreamPlayer2D6" type="AudioStreamPlayer2D" parent="SFX"]
+volume_db = -10.0
+bus = "Player"
+script = ExtResource( 4 )
+samples = [ ExtResource( 15 ) ]
 random_volume_range = 0
 random_pitch_range = 0.7
 

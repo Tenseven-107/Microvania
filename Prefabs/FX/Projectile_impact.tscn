@@ -1,0 +1,49 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Scripts/FX/Particles.gd" type="Script" id=1]
+[ext_resource path="res://Sprites/FX/Dust_puff.png" type="Texture" id=2]
+[ext_resource path="res://SFX/Misc/Basic_projectile_collision.wav" type="AudioStream" id=3]
+[ext_resource path="res://addons/randomAudioStreamPlayer/random_audio_stream_player_2D.gd" type="Script" id=4]
+
+[sub_resource type="Curve" id=1]
+_data = [ Vector2( 0, 0.532955 ), 0.0, 0.0, 0, 0, Vector2( 0.490099, 0.532955 ), 0.0, 0.0, 0, 0, Vector2( 0.752475, 0.332955 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=2]
+interpolation_mode = 1
+offsets = PoolRealArray( 0, 0.391061, 0.787709 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 0.854902, 0.270588, 1, 1, 0.505882, 0.258824, 1 )
+
+[node name="Hit_impact" type="Node2D"]
+script = ExtResource( 1 )
+sounds = true
+
+[node name="Audio" type="AudioStreamPlayer2D" parent="."]
+volume_db = -10.0
+bus = "Enviroment"
+script = ExtResource( 4 )
+samples = [ ExtResource( 3 ) ]
+random_volume_range = 0
+random_pitch_range = 0.7
+
+[node name="Particles" type="Node2D" parent="."]
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Particles"]
+emitting = false
+amount = 12
+lifetime = 0.3
+one_shot = true
+explosiveness = 1.0
+texture = ExtResource( 2 )
+spread = 180.0
+initial_velocity = 50.0
+initial_velocity_random = 1.0
+angle = 720.0
+angle_random = 1.0
+scale_amount_curve = SubResource( 1 )
+color_ramp = SubResource( 2 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

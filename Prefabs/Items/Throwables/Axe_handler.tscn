@@ -1,13 +1,14 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Scripts/Items/Throwables/Throwable.gd" type="Script" id=1]
-[ext_resource path="res://Prefabs/Items/Throwables/Knife_projectile.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Prefabs/Items/Throwables/Axe_projectile.tscn" type="PackedScene" id=2]
 
-[node name="Knife_handler" type="Node2D"]
+[node name="Axe_handler" type="Node2D"]
 script = ExtResource( 1 )
 projectile = ExtResource( 2 )
 
 [node name="Position2D" type="Position2D" parent="."]
+rotation = -1.39626
 
 [node name="Cooldown" type="Timer" parent="."]
 wait_time = 0.23

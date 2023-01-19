@@ -1101,6 +1101,7 @@ script = ExtResource( 3 )
 [node name="Game_camera" parent="." instance=ExtResource( 4 )]
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
+power = 100
 
 [node name="TileMap" type="TileMap" parent="."]
 z_index = -1
