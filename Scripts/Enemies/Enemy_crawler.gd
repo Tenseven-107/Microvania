@@ -91,12 +91,12 @@ func _physics_process(delta):
 		else:
 			move = collision.normal.rotated(PI/2)
 			rotation = move.angle()
-		# Place the enemy at the edge of a platue one pixel deep.
+		# Place the enemy at the edge of a platue one and make the collider contact the surface.
 
 
 
 # Taking damage
-func handle_hit(damage, null_value):
+func handle_hit(damage, _null_value):
 	if respawn_timer.is_stopped() and !dead:
 		hp -= damage
 
@@ -146,7 +146,7 @@ func enable_disable():
 		active = false
 
 		# If still dead, dont respawn
-		if respawn_timer.is_stopped() and dead:
+		if !respawn_timer.is_stopped() and dead:
 			respawn_timer.start()
 			dead = true
 

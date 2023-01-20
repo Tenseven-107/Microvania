@@ -131,6 +131,7 @@ script = ExtResource( 2 )
 dead_fx = ExtResource( 9 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+z_index = 1
 shape = SubResource( 108 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]

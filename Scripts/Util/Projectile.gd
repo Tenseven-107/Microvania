@@ -80,7 +80,7 @@ func _physics_process(delta):
 
 
 # Misc
-func _process(delta):
+func _process(_delta):
 	collider.disabled = get_can_damage()
 
 

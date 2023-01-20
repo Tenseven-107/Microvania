@@ -29,7 +29,7 @@ func _on_Damage_zone_body_entered(body: Node):
 
 
 
-func _process(delta):
+func _process(_delta):
 	if constant:
 		for body in get_overlapping_bodies():
 			if body.has_method("handle_hit") and body.team != team and !body.dead:

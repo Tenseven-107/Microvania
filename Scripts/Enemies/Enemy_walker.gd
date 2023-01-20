@@ -66,7 +66,7 @@ func _ready():
 
 
 # Movement
-func _physics_process(delta):
+func _physics_process(_delta):
 	if respawn_timer.is_stopped() and !dead:
 		sprite.playing = true
 
@@ -94,7 +94,7 @@ func _physics_process(delta):
 
 
 # Taking damage
-func handle_hit(damage, null_value):
+func handle_hit(damage, _null_value):
 	if respawn_timer.is_stopped() and !dead:
 		hp -= damage
 
@@ -144,7 +144,7 @@ func enable_disable():
 		active = false
 
 		# If still dead, dont respawn
-		if respawn_timer.is_stopped() and dead:
+		if !respawn_timer.is_stopped() and dead:
 			respawn_timer.start()
 			dead = true
 
