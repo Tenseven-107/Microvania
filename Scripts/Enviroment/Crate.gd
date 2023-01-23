@@ -2,6 +2,8 @@ extends KinematicBody2D
 
 
 
+export (PackedScene) var pickup: PackedScene
+
 onready var collider = $CollisionShape2D
 onready var vis = $VisibilityNotifier2D
 onready var respawn_timer = $Respawn_timer
@@ -24,6 +26,7 @@ var dead: bool = false
 func _ready():
 	pos = global_position
 
+	GlobalSignals.connect("init_crates", self, "initialize")
 	vis.connect("screen_entered", self, "enable_disable")
 	vis.connect("screen_exited", self, "enable_disable")
 
@@ -53,6 +56,16 @@ func die():
 
 	dead = true
 	hide()
+
+	spawn()
+
+
+
+# Spawn instances
+func spawn():
+	var pickup_inst = pickup.instance()
+	pickup.global_position = global_position
+	
 
 
 

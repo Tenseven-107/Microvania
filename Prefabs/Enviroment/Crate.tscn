@@ -21,6 +21,7 @@ shape = SubResource( 2 )
 texture = SubResource( 1 )
 
 [node name="Respawn_timer" type="Timer" parent="."]
+wait_time = 60.0
 one_shot = true
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
