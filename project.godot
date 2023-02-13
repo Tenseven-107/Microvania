@@ -9,10 +9,25 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node2D",
+"class": "Air_Enemy",
+"language": "GDScript",
+"path": "res://Scripts/Enemies/Enemy_air.gd"
+}, {
+"base": "Node2D",
+"class": "Crawler_Enemy",
+"language": "GDScript",
+"path": "res://Scripts/Enemies/Enemy_crawler.gd"
+}, {
 "base": "Area2D",
 "class": "DamageZone",
 "language": "GDScript",
 "path": "res://Scripts/Util/Damage_zone.gd"
+}, {
+"base": "KinematicBody2D",
+"class": "Enemy_Entity",
+"language": "GDScript",
+"path": "res://Scripts/Enemies/Enemy_entity.gd"
 }, {
 "base": "Camera2D",
 "class": "GameCamera",
@@ -48,16 +63,25 @@ _global_script_classes=[ {
 "class": "ThrowablePickup",
 "language": "GDScript",
 "path": "res://Scripts/Items/Throwables/Throwable_pickup.gd"
+}, {
+"base": "Node2D",
+"class": "Walker_Enemy",
+"language": "GDScript",
+"path": "res://Scripts/Enemies/Enemy_walker.gd"
 } ]
 _global_script_class_icons={
+"Air_Enemy": "",
+"Crawler_Enemy": "",
 "DamageZone": "",
+"Enemy_Entity": "",
 "GameCamera": "",
 "LootGenerator": "",
 "MusicTrigger": "",
 "Player": "",
 "Projectile": "",
 "ThrowableController": "",
-"ThrowablePickup": ""
+"ThrowablePickup": "",
+"Walker_Enemy": ""
 }
 
 [application]

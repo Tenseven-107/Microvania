@@ -1159,9 +1159,6 @@ position = Vector2( 24, 64 )
 [node name="Jellyfish_enemy3" parent="Enemy_container" instance=ExtResource( 7 )]
 position = Vector2( -249, -85 )
 
-[node name="Crab_enemy" parent="Enemy_container" instance=ExtResource( 8 )]
-position = Vector2( 230, -20 )
-
 [node name="Jellyfish_enemy4" parent="Enemy_container" instance=ExtResource( 7 )]
 position = Vector2( 872, -69 )
 
@@ -1181,6 +1178,9 @@ rotation = 3.14159
 [node name="Octo_enemy7" parent="Enemy_container" instance=ExtResource( 5 )]
 position = Vector2( 886, 292 )
 rotation = 3.14159
+
+[node name="Crab_enemy" parent="Enemy_container" instance=ExtResource( 8 )]
+position = Vector2( 231, -20 )
 
 [node name="FX_container" type="Node2D" parent="."]
 

@@ -45,10 +45,14 @@ export (int) var team: int = 0
 
 export (int) var power: int = 0
 
-export (bool) var dead: bool = false
-
 # Move checks
-export (bool) var locked: bool = false
+enum {
+	ACTIVE,
+	ATTACKING,
+	CAN_JUMP,
+	DEAD
+}
+var state = null
 var can_jump: bool = true
 
 # Misc
@@ -81,86 +85,98 @@ func _physics_process(delta):
 		trail.active = false
 		if move_dust.emitting:
 			move_dust.emitting = false
-	else:
+	elif state != ATTACKING:
 		anim_state_machine.start("Land")
 
 	motion.x = clamp(motion.x, -speed, speed)
 
 
-	# Movement
-	if !locked:
-		if Input.is_action_pressed("right"):
-			motion.x += acceleration
-			weapon.scale.x = 1
-			throwable_controller.scale.x = 1
+	# State Machine
+	match state:
 
-			sprite.flip_h = false
-		elif Input.is_action_pressed("left"):
-			motion.x -= acceleration
-			weapon.scale.x = -1
-			throwable_controller.scale.x = -1
+		ACTIVE:
 
-			sprite.flip_h = true
-		else: 
-			motion.x = move_toward(motion.x, 0, delta * (speed * 4))
+			# Movement
+			if Input.is_action_pressed("right"):
+				motion.x += acceleration
+				weapon.scale.x = 1
+				throwable_controller.scale.x = 1
 
-	else:
-		motion.x = 0
+				sprite.flip_h = false
+			elif Input.is_action_pressed("left"):
+				motion.x -= acceleration
+				weapon.scale.x = -1
+				throwable_controller.scale.x = -1
 
-	if motion.x != 0 and is_on_floor():
-		anim_state_machine.travel("Walk")
+				sprite.flip_h = true
+			else: 
+				motion.x = move_toward(motion.x, 0, delta * (speed * 4))
 
-		if (motion.x == (speed + acceleration) 
-		or motion.x == -(speed + acceleration)):
-			move_dust.emitting = true
-		else:
-			move_dust.emitting = false
+			if motion.x != 0 and is_on_floor():
+				anim_state_machine.travel("Walk")
 
-	elif motion.x == 0 and is_on_floor():
-		anim_state_machine.travel("Idle")
-		move_dust.emitting = false
+				if (motion.x == (speed + acceleration) 
+				or motion.x == -(speed + acceleration)):
+					move_dust.emitting = true
+				else:
+					move_dust.emitting = false
 
+			elif motion.x == 0 and is_on_floor():
+				anim_state_machine.travel("Idle")
+				move_dust.emitting = false
+			
+			# Jumping
+			var buffer_raycasts = raycasts.get_children()
+			for br in buffer_raycasts:
+				if br.is_colliding() or is_on_floor():
+					coyote.start()
+					can_jump = true
+				else:
+					can_jump = false
 
-	# Jumping
-	var buffer_raycasts = raycasts.get_children()
-	for br in buffer_raycasts:
-		if br.is_colliding() or is_on_floor():
-			coyote.start()
-			can_jump = true
-		else:
-			can_jump = false
+			if (Input.is_action_just_pressed("up") and can_jump 
+			or Input.is_action_just_pressed("up") and !coyote.is_stopped()):
+				motion.y = -jump_force
+				can_jump = false
+				coyote.stop()
 
-	if (Input.is_action_just_pressed("up") and can_jump 
-	or Input.is_action_just_pressed("up") and !coyote.is_stopped()):
-		motion.y = -jump_force
-		can_jump = false
-		coyote.stop()
+				var dust_inst =  dust_puff.instance()
+				dust_inst.global_position = dust_pos.global_position
+				fx_container.call_deferred("add_child", dust_inst)
 
-		var dust_inst =  dust_puff.instance()
-		dust_inst.global_position = dust_pos.global_position
-		fx_container.call_deferred("add_child", dust_inst)
+				anim_state_machine.start("Jump")
+				trail.active = true
 
-		anim_state_machine.start("Jump")
-		trail.active = true
+			if Input.is_action_just_released("up") && motion.y != 0:
+				motion.y = 0
 
-	if Input.is_action_just_released("up") && motion.y != 0:
-		motion.y = 0
+		ATTACKING:
+			motion.x = 0
 
+		DEAD:
+			pass
 
-	# Ducking
+	# Down
 	if Input.is_action_pressed("down") and !is_on_floor():
 		motion.y = max_fall_speed * 4
-
 
 	# Attacking
 	if Input.is_action_just_pressed("attack") and cooldown.is_stopped():
 		anim_state_machine.start("Attack")
+		set_state(ATTACKING)
+
 		cooldown.start()
+	elif cooldown.is_stopped():
+		set_state(ACTIVE)
 
 	if (Input.is_action_just_pressed("action") and throwable_controller.get_handler() 
 	and throwable_controller.get_handler_stopped() and power > 0):
 		throwable_controller.handle_attack()
+		set_state(ATTACKING)
+
 		anim_state_machine.start("Throw")
+	elif throwable_controller.get_handler_stopped():
+		set_state(ACTIVE)
 
 
 	# Motion
@@ -168,9 +184,18 @@ func _physics_process(delta):
 
 
 
+# Switch state
+func set_state(new_state):
+	if new_state != null:
+		state = new_state
+	elif new_state == null:
+		state = ACTIVE
+
+
+
 # Taking damage
 func handle_hit(value, damaging: bool):
-	if i_frames.is_stopped() and damaging:
+	if i_frames.is_stopped() and damaging and state != DEAD:
 		i_frames.start()
 		hp -= value
 
@@ -188,7 +213,7 @@ func handle_hit(value, damaging: bool):
 
 
 func die():
-	dead = true
+	set_state(DEAD)
 	queue_free()
 
 

@@ -54,18 +54,9 @@ func die():
 	respawn_timer.start()
 	collider.set_deferred("disabled", true)
 
+	GlobalSignals.emit_signal("spawn_pickup", global_position)
 	dead = true
 	hide()
-
-	spawn()
-
-
-
-# Spawn instances
-func spawn():
-	var pickup_inst = pickup.instance()
-	pickup.global_position = global_position
-	
 
 
 

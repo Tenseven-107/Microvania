@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://Scripts/Enemies/Enemy_walker.gd" type="Script" id=1]
 [ext_resource path="res://SFX/Enemies/Alien_2.wav" type="AudioStream" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://SFX/Enemies/Enemy_hurt.wav" type="AudioStream" id=8]
 [ext_resource path="res://Prefabs/FX/Enemy_death.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Scripts/Util/Damage_zone.gd" type="Script" id=10]
+[ext_resource path="res://Scripts/Enemies/Enemy_entity.gd" type="Script" id=11]
 
 [sub_resource type="RectangleShape2D" id=59]
 extents = Vector2( 6, 8 )
@@ -127,8 +128,17 @@ tracks/0/keys = {
 [node name="Fish_enemy" type="KinematicBody2D"]
 collision_layer = 0
 collision_mask = 2
-script = ExtResource( 1 )
+script = ExtResource( 11 )
 dead_fx = ExtResource( 9 )
+
+[node name="AI" type="Node2D" parent="."]
+script = ExtResource( 1 )
+
+[node name="RayCast2D" type="RayCast2D" parent="AI"]
+position = Vector2( 5, 9 )
+enabled = true
+cast_to = Vector2( 0, 10 )
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 1 )
@@ -152,12 +162,6 @@ shape = SubResource( 65 )
 [node name="Respawn_timer" type="Timer" parent="."]
 wait_time = 10.0
 one_shot = true
-
-[node name="RayCast2D" type="RayCast2D" parent="."]
-position = Vector2( 5, 9 )
-enabled = true
-cast_to = Vector2( 0, 10 )
-collision_mask = 2
 
 [node name="SFX" type="Node2D" parent="."]
 

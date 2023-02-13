@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Scripts/Enemies/Enemy_air.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/Util/Damage_zone.gd" type="Script" id=2]
@@ -8,7 +8,8 @@
 [ext_resource path="res://Sprites/Enemies/Enemy_2.png" type="Texture" id=6]
 [ext_resource path="res://SFX/Enemies/Jelly_2.wav" type="AudioStream" id=7]
 [ext_resource path="res://addons/randomAudioStreamPlayer/random_audio_stream_player_2D.gd" type="Script" id=8]
-[ext_resource path="res://Prefabs/FX/Enemy_death.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Scripts/Enemies/Enemy_entity.gd" type="Script" id=9]
+[ext_resource path="res://Prefabs/FX/Enemy_death.tscn" type="PackedScene" id=10]
 
 [sub_resource type="RectangleShape2D" id=59]
 extents = Vector2( 6, 7 )
@@ -126,8 +127,11 @@ tracks/0/keys = {
 [node name="Jellyfish_enemy" type="KinematicBody2D"]
 collision_layer = 0
 collision_mask = 2
+script = ExtResource( 9 )
+dead_fx = ExtResource( 10 )
+
+[node name="AI" type="Node2D" parent="."]
 script = ExtResource( 1 )
-dead_fx = ExtResource( 9 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, -3 )

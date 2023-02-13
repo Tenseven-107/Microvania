@@ -2,6 +2,8 @@ extends Node
 class_name LootGenerator
 
 
+var pickup = preload("res://Prefabs/Items/Misc/Power_pickup.tscn")
+
 export (int) var max_number: int = 5
 
 
@@ -20,6 +22,7 @@ func _ready():
 	randomize()
 
 	GlobalSignals.connect("spawn_item", self, "spawn")
+	GlobalSignals.connect("spawn_pickup", self, "spawn_power")
 
 
 
@@ -31,6 +34,11 @@ func spawn(pos):
 		var instance = picked_item.instance()
 		instance.global_position = pos
 		item_container.call_deferred("add_child", instance)
+
+func spawn_power(pos):
+	var instance = pickup.instance()
+	instance.global_position = pos
+	item_container.call_deferred("add_child", instance)
 
 
 
